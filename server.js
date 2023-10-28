@@ -27,12 +27,13 @@ fastify.get('/', async (request, reply) => {
 });
 
 const start = async () => {
-	try {
-		await fastify.listen(PORT ?? 3000);
-	} catch (err) {
-		fastify.log.error(err);
-		process.exit(1);
-	}
+	fastify.listen(process.env.PORT || 3000, "0.0.0.0", (err, address) => {
+		if (err) {
+			console.error(err);
+			process.exit(1);
+		}
+		console.log(`Server listening at ${address}`);
+	});
 };
 
 start();
