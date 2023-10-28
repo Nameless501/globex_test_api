@@ -1,5 +1,10 @@
 const fs = require('fs');
+
 const fastify = require('fastify')({ logger: true });
+
+require('dotenv').config();
+
+const { PORT } = process.env;
 
 fastify.register(require('fastify-cors'), {});
 
@@ -10,13 +15,11 @@ fastify.get('/', async (request, reply) => {
 			return;
 		}
 
-		if(request.query.term)
-		{
-			const result = JSON.parse(data).filter((elem)=> elem.name.toLowerCase().search(request.query.term.toLowerCase()) !== -1);
+		if (request.query.term) {
+			const result = JSON.parse(data).filter((elem) => elem.name.toLowerCase().search(request.query.term.toLowerCase()) !== -1);
 			reply.send(JSON.stringify(result));
 		}
-		else
-		{
+		else {
 			reply.send(data);
 		}
 
@@ -24,12 +27,12 @@ fastify.get('/', async (request, reply) => {
 });
 
 const start = async () => {
-  try {
-    await fastify.listen(3000)
-  } catch (err) {
-    fastify.log.error(err);
-    process.exit(1);
-  }
+	try {
+		await fastify.listen(PORT ?? 3000);
+	} catch (err) {
+		fastify.log.error(err);
+		process.exit(1);
+	}
 };
 
 start();
